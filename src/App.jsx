@@ -17,7 +17,6 @@ function App() {
         <a href="#contact" className="nav-cta">Let's Talk</a>
       </header>
 
-      {/* Expanded Main Content Area (No restrictive center wrapper) */}
       <main className="main-content">
         {/* 1. Team Members Section */}
         <section className="section">
@@ -35,6 +34,25 @@ function App() {
                   {member.skills.map((skill, index) => (
                     <span key={index} className="badge">{skill}</span>
                   ))}
+                </div>
+
+                {/* Social Links Section */}
+                <div className="social-links">
+                  {member.socials?.github && (
+                    <a href={member.socials.github} target="_blank" rel="noopener noreferrer" className="social-icon">
+                      GitHub
+                    </a>
+                  )}
+                  {member.socials?.linkedin && (
+                    <a href={member.socials.linkedin} target="_blank" rel="noopener noreferrer" className="social-icon">
+                      LinkedIn
+                    </a>
+                  )}
+                  {member.socials?.twitter && (
+                    <a href={member.socials.twitter} target="_blank" rel="noopener noreferrer" className="social-icon">
+                      Twitter
+                    </a>
+                  )}
                 </div>
               </div>
             ))}

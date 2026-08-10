@@ -5,7 +5,12 @@ export const teamMembers = [
     role: 'Lead Architect & CachyOS Enthusiast',
     bio: 'Specializes in system performance, local AI configurations, and backend setup.',
     skills: ['Linux', 'React', 'Node.js', 'Ollama'],
-    avatar: 'https://via.placeholder.com/150', // Replace with your actual image URL
+    avatar: 'https://via.placeholder.com/150',
+    socials: {
+      github: 'https://github.com/IamKier',
+      linkedin: 'https://linkedin.com',
+      twitter: 'https://twitter.com'
+    }
   },
   {
     id: 2,
@@ -13,7 +18,11 @@ export const teamMembers = [
     role: 'Frontend Developer',
     bio: 'Passionate about creating clean, responsive, and accessible user interfaces.',
     skills: ['React', 'CSS', 'JavaScript'],
-    avatar: 'https://via.placeholder.com/150', // Replace with your actual image URL
+    avatar: 'https://via.placeholder.com/150',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com'
+    }
   },
   {
     id: 3,
@@ -21,7 +30,11 @@ export const teamMembers = [
     role: 'Full Stack Developer',
     bio: 'Focuses on integrating frontend components seamlessly with backend databases and services.',
     skills: ['React', 'Node.js', 'Express', 'Git'],
-    avatar: 'https://via.placeholder.com/150', // Replace with your actual image URL
+    avatar: 'https://via.placeholder.com/150',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com'
+    }
   },
 ];
 
