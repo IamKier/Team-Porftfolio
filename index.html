@@ -4,7 +4,47 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>coding-projects</title>
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <title>DevTeam — Software Engineering Group</title>
+    <meta
+      name="description"
+      content="DevTeam is a software engineering group building fast, reliable web and cross-platform applications with React, Node.js and Linux."
+    />
+
+    <!-- TODO: set this to the deployed URL so social cards resolve absolute asset paths. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DevTeam" />
+    <meta property="og:title" content="DevTeam — Software Engineering Group" />
+    <meta
+      property="og:description"
+      content="A small software team building fast, reliable web and cross-platform applications."
+    />
+    <meta property="og:image" content="/favicon.svg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DevTeam — Software Engineering Group" />
+    <meta
+      name="twitter:description"
+      content="A small software team building fast, reliable web and cross-platform applications."
+    />
+    <meta name="twitter:image" content="/favicon.svg" />
+
+    <script>
+      // Apply the stored theme before first paint so the page never flashes
+      // the wrong one. Kept in sync with src/components/ThemeToggle.jsx.
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.dataset.theme = stored;
+          }
+        } catch (e) {
+          /* localStorage unavailable (private mode) — fall back to the OS theme. */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

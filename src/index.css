@@ -1,111 +1,182 @@
+/*
+ * Theme: one token set using light-dark(), so there is no duplicated dark block.
+ * `color-scheme` drives which half resolves — following the OS by default, and
+ * pinned by [data-theme] when the visitor picks a side with the toggle.
+ */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
   color-scheme: light dark;
-  color: var(--text);
+
+  /* Surfaces */
+  --bg: light-dark(#ffffff, #0b0d12);
+  --surface: light-dark(#ffffff, #12151c);
+  --surface-2: light-dark(#f8fafc, #161a23);
+
+  /* Ink */
+  --ink: light-dark(#0f172a, #f1f5f9);
+  --ink-2: light-dark(#475569, #a6b1c2);
+  --ink-3: light-dark(#8a95a6, #6b7688);
+
+  /* Lines & accent */
+  --line: light-dark(#e6e9ef, #222836);
+  --line-strong: light-dark(#d3d9e3, #2f3747);
+  --accent: light-dark(#0284c7, #38bdf8);
+  --accent-soft: light-dark(rgba(2, 132, 199, 0.09), rgba(56, 189, 248, 0.12));
+
+  /*
+   * Decorative dot field. This is the one token JS reads (DotBackground parses
+   * it via getComputedStyle), so it is declared per-theme rather than with
+   * light-dark() — a computed light-dark() string is ambiguous to parse.
+   */
+  --dot: rgba(15, 23, 42, 0.3);
+
+  /* light-dark() resolves colours only, so shadows are composed from tokens. */
+  --shadow-near: light-dark(rgba(15, 23, 42, 0.05), rgba(0, 0, 0, 0.45));
+  --shadow-far: light-dark(rgba(15, 23, 42, 0.3), rgba(0, 0, 0, 0.75));
+  --shadow: 0 1px 2px var(--shadow-near), 0 12px 28px -18px var(--shadow-far);
+
+  /* Layout */
+  --container: 1120px;
+  --gutter: clamp(20px, 5vw, 56px);
+  --radius: 14px;
+  --nav-h: 68px;
+
+  --sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Consolas, monospace;
+
+  font: 16px/1.6 var(--sans);
+  font-optical-sizing: auto;
+  color: var(--ink-2);
   background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --dot: rgba(226, 232, 240, 0.26);
+}
+
+/* Following the OS, unless the visitor has explicitly pinned light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --dot: rgba(226, 232, 240, 0.26);
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+  background: var(--bg);
+  color: var(--ink-2);
+  overflow-x: hidden;
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3,
+h4 {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  font-size: clamp(2.25rem, 5.5vw, 3.5rem);
+  letter-spacing: -0.035em;
 }
+
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+  font-size: clamp(1.5rem, 3vw, 2rem);
 }
+
+h3 {
+  font-size: 1.0625rem;
+}
+
 p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Skip link — visible only once focused. */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transform: translateY(calc(-100% - 24px));
+  transition: transform 0.18s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
