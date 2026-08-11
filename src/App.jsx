@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { teamMembers, groupInfo, groupProjects } from './data/teamData';
 import DotBackground from './components/DotBackground';
 import ThemeToggle from './components/ThemeToggle';
+import CopyEmail from './components/CopyEmail';
 import useActiveSection from './hooks/useActiveSection';
 import { ExternalIcon, GitHubIcon, MenuIcon, CloseIcon } from './components/Icons';
 import { socialIcons } from './components/socialIcons';
@@ -52,7 +53,7 @@ function App() {
         <div className="container nav__inner">
           <a href="#top" className="brand">
             <span className="brand__mark" aria-hidden="true" />
-            <span className="brand__name">DevTeam</span>
+            <span className="brand__name">LokalGrp.dev</span>
             <span className="brand__sub">Software Engineering Group</span>
           </a>
 
@@ -105,15 +106,17 @@ function App() {
 
       <main id="main">
         <section className="container hero" id="top">
-          <p className="status">
-            <span className="status__dot" aria-hidden="true" />
-            Available for new projects
-          </p>
-          <h1>{groupInfo.tagline}</h1>
-          <p className="hero__lead">{groupInfo.description}</p>
-          <div className="hero__actions">
-            <a href="#work" className="btn btn--primary">View our work</a>
-            <a href="#team" className="btn btn--ghost">Meet the team</a>
+          <div className="hero__inner">
+            <p className="status">
+              <span className="status__dot" aria-hidden="true" />
+              Available for new projects
+            </p>
+            <h1>{groupInfo.tagline}</h1>
+            <p className="hero__lead">{groupInfo.description}</p>
+            <div className="hero__actions">
+              <a href="#work" className="btn btn--primary">View our work</a>
+              <a href="#team" className="btn btn--ghost">Meet the team</a>
+            </div>
           </div>
         </section>
 
@@ -272,14 +275,16 @@ function App() {
             <a href={`mailto:${groupInfo.email}`} className="btn btn--primary">
               Get in touch
             </a>
-            <span className="contact__email">{groupInfo.email}</span>
+            <div>
+              <CopyEmail email={groupInfo.email} />
+            </div>
           </div>
         </section>
       </main>
 
       <footer className="footer">
         <div className="container footer__inner">
-          <span>© {new Date().getFullYear()} DevTeam</span>
+          <span>© {new Date().getFullYear()} LokalGrp.dev</span>
           <span>Built with React &amp; Vite</span>
         </div>
       </footer>

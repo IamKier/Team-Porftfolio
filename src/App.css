@@ -198,8 +198,16 @@
 
 /* ---------------------------------------------------------------- Hero --- */
 
+/*
+ * The measure is constrained on an inner wrapper, not on .hero itself —
+ * .hero is also a .container, and narrowing that re-centres the whole block,
+ * which pushed the hero ~180px right of every section below it.
+ */
 .hero {
   padding-block: clamp(72px, 13vw, 140px) clamp(56px, 9vw, 96px);
+}
+
+.hero__inner {
   max-width: 760px;
 }
 
@@ -244,7 +252,7 @@
 .section {
   padding-block: clamp(48px, 7vw, 80px);
   border-top: 1px solid var(--line);
-  scroll-margin-top: var(--nav-h);
+  scroll-margin-top: calc(var(--nav-h) + 16px);
 }
 
 .section__head {
@@ -451,6 +459,14 @@
   overflow: hidden;
 }
 
+/* Placeholder tiles echo the dot field behind the page, so an unfinished
+   thumbnail still looks deliberate rather than blank. */
+.project__media:not(:has(img)) {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-position: -1px -1px;
+}
+
 .project__media img {
   width: 100%;
   height: 100%;
@@ -537,12 +553,36 @@
   margin-top: 32px;
 }
 
-.contact__email {
-  display: block;
+.copy-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 18px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
   font-family: var(--mono);
   font-size: 0.8125rem;
   color: var(--ink-3);
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.copy-email:hover {
+  color: var(--ink);
+  border-color: var(--line);
+  background: var(--surface-2);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* -------------------------------------------------------------- Footer --- */

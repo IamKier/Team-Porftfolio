@@ -11,24 +11,37 @@ const ACTIVE_ALPHA = 2.4;
 const ACTIVE_GROWTH = 1.1;
 
 const FALLBACK_COLOR = { r: 100, g: 116, b: 139, a: 0.3 };
+const SENTINEL = '#010203';
 
-const prefersDark = () => {
-  const pinned = document.documentElement.dataset.theme;
-  if (pinned === 'dark') return true;
-  if (pinned === 'light') return false;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
-};
+/**
+ * Normalises any CSS colour by round-tripping it through a canvas fillStyle,
+ * which always yields '#rrggbb' or 'rgba(r, g, b, a)'. Hand-rolled regexes are
+ * not enough here: the CSS minifier rewrites rgba() tokens as #rrggbbaa.
+ */
+const parseColor = (ctx, value) => {
+  if (!value) return FALLBACK_COLOR;
 
-const parseColor = (value) => {
-  // Some engines report light-dark() unresolved. Naively grabbing the first
-  // numbers would always yield the light half, so pick the correct one.
-  let color = value;
-  if (color.includes('light-dark(')) {
-    const halves = color.match(/rgba?\([^)]*\)/g);
-    if (halves?.length === 2) color = halves[prefersDark() ? 1 : 0];
+  const previous = ctx.fillStyle;
+  ctx.fillStyle = SENTINEL;
+  ctx.fillStyle = value.trim();
+  const normalized = ctx.fillStyle;
+  ctx.fillStyle = previous;
+
+  // fillStyle ignores unparseable values, so the sentinel surviving means the
+  // input was invalid.
+  if (normalized === SENTINEL) return FALLBACK_COLOR;
+
+  if (normalized.startsWith('#')) {
+    const hex = normalized.slice(1);
+    return {
+      r: parseInt(hex.slice(0, 2), 16),
+      g: parseInt(hex.slice(2, 4), 16),
+      b: parseInt(hex.slice(4, 6), 16),
+      a: 1,
+    };
   }
 
-  const parts = color.match(/[\d.]+/g);
+  const parts = normalized.match(/[\d.]+/g);
   if (!parts || parts.length < 3) return FALLBACK_COLOR;
   const [r, g, b, a = 1] = parts.map(Number);
   return { r, g, b, a };
@@ -48,11 +61,24 @@ export default function DotBackground() {
     let color = FALLBACK_COLOR;
     let frameId = null;
     let resizeId = null;
+    let recheckId = null;
     const mouse = { x: null, y: null };
 
-    // The dot colour lives in CSS (`color: var(--dot)`) so it follows the theme.
+    /*
+     * Read the --dot custom property straight off <html> rather than the
+     * canvas's resolved `color`. The reduced-motion rule sets
+     * `transition-duration` on `*`, and since `transition-property` defaults to
+     * `all`, `color` becomes a genuinely transitioned property — so
+     * getComputedStyle reports the PREVIOUS colour for a frame or two after a
+     * theme flip. Caching that stale value left the dots painting the old
+     * theme's colour until a reload. Custom properties are not animated by that
+     * rule, so this reflects the new theme immediately.
+     */
     const readColor = () => {
-      color = parseColor(getComputedStyle(canvas).color);
+      const token = getComputedStyle(document.documentElement)
+        .getPropertyValue('--dot')
+        .trim();
+      color = parseColor(ctx, token || getComputedStyle(canvas).color);
     };
 
     const draw = () => {
@@ -166,6 +192,12 @@ export default function DotBackground() {
     const handleThemeChange = () => {
       readColor();
       draw();
+      // Safety net in case a future style change reintroduces a lagging value.
+      clearTimeout(recheckId);
+      recheckId = setTimeout(() => {
+        readColor();
+        draw();
+      }, 100);
     };
 
     const themeObserver = new MutationObserver(handleThemeChange);
@@ -186,6 +218,7 @@ export default function DotBackground() {
     return () => {
       stop();
       cancelAnimationFrame(resizeId);
+      clearTimeout(recheckId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('resize', handleResize);

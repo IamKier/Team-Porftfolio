@@ -14,7 +14,9 @@
   /* Ink */
   --ink: light-dark(#0f172a, #f1f5f9);
   --ink-2: light-dark(#475569, #a6b1c2);
-  --ink-3: light-dark(#8a95a6, #6b7688);
+  /* Muted text. Both values are tuned to clear WCAG AA (4.5:1) on their own
+     theme's surfaces — the lighter grey only reads on a dark background. */
+  --ink-3: light-dark(#64748b, #8a95a6);
 
   /* Lines & accent */
   --line: light-dark(#e6e9ef, #222836);
@@ -77,6 +79,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Reserve the scrollbar track so short and tall pages align identically. */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -119,6 +123,12 @@ h3 {
 
 p {
   margin: 0;
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
 }
 
 a {
@@ -173,10 +183,18 @@ button {
     scroll-behavior: auto;
   }
 
+  /*
+   * `transition: none`, NOT the usual `transition-duration: 0.01ms`. Since
+   * `transition-property` defaults to `all`, a near-zero duration still makes
+   * every property a genuinely transitioning one, and getComputedStyle then
+   * reports pre-transition values for a frame or two after a change. That is
+   * what made DotBackground cache a stale colour on every theme switch.
+   */
   *,
   *::before,
   *::after {
+    transition: none !important;
     animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
