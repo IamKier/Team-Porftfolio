@@ -1,7 +1,13 @@
+/*
+ * Negative z-index, so staying behind the content does not depend on painting
+ * order. It already worked at 0 only because .app is a flex container and flex
+ * items paint like positioned elements, leaving DOM order to put the content on
+ * top; -1 keeps it correct if .app ever stops being flex.
+ */
 .dot-background {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
   color: var(--dot);
 }
