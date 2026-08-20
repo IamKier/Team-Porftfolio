@@ -13,9 +13,9 @@ export const teamMembers = [
   {
     id: 1,
     name: 'Kenth Condez',
-    role: 'Lead Architect & Backend Developer',
-    bio: 'Designs system architecture, backend services, and infrastructure with a focus on performance, reliability, and maintainability.',
-    skills: ['Linux', 'React', 'Node.js', 'Ollama', 'AI Software Engineering'],
+    role: 'Full Stack Developer & Systems Architect',
+    bio: 'Shapes technical direction across the stack, from database and backend design through deployment, with a focus on performance and long-term maintainability.',
+    skills: ['Laravel', 'PHP', 'MySQL', 'Linux', 'Docker', 'Git', 'AI Software Engineering'],
     avatar: avatarKenth,
     socials: {
       github: 'https://github.com/IamKier',
