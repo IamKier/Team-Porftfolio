@@ -126,11 +126,15 @@ function App() {
             <div className="section__head">
               <p className="eyebrow">01 — Team</p>
               <h2>The people behind the work</h2>
+              <p className="section__lead">
+                Three developers combining system architecture, full-stack development, and
+                visual design to build complete digital products from backend to interface.
+              </p>
             </div>
 
             <div className="team-grid">
               {teamMembers.map((member) => (
-                <article key={member.id} className="card">
+                <article key={member.id} className="card member">
                   <div className="member__head">
                     {member.avatar ? (
                       <img src={member.avatar} alt="" className="avatar" />
@@ -211,15 +215,30 @@ function App() {
             <div className="project-grid">
               {groupProjects.map((project, index) => (
                 <article key={project.id} className="card project">
-                  <div className="project__media">
-                    {project.image ? (
-                      <img src={project.image} alt={`${project.title} screenshot`} />
-                    ) : (
-                      <span className="project__monogram" aria-hidden="true">
-                        {initialsOf(project.title)}
-                      </span>
-                    )}
-                  </div>
+                  {/* The thumbnail doubles as a link to the live site when there
+                      is one, so it falls back to a plain div otherwise. */}
+                  {(() => {
+                    const Media = project.links?.live ? 'a' : 'div';
+                    const mediaProps = project.links?.live
+                      ? {
+                          href: project.links.live,
+                          target: '_blank',
+                          rel: 'noopener noreferrer',
+                          'aria-label': `Open the ${project.title} live site`,
+                        }
+                      : {};
+                    return (
+                      <Media className="project__media" {...mediaProps}>
+                        {project.image ? (
+                          <img src={project.image} alt={`${project.title} screenshot`} />
+                        ) : (
+                          <span className="project__monogram" aria-hidden="true">
+                            {initialsOf(project.title)}
+                          </span>
+                        )}
+                      </Media>
+                    );
+                  })()}
 
                   <div className="project__body">
                     <p className="project__index">
@@ -235,14 +254,16 @@ function App() {
                     </div>
 
                     {(project.links?.live || project.links?.source) && (
-                      <div className="project__links">
+                      <div className="socials">
                         {project.links.live && (
                           <a
                             href={project.links.live}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`${project.title} live site`}
+                            title="Live site"
                           >
-                            <ExternalIcon /> Live site
+                            <ExternalIcon />
                           </a>
                         )}
                         {project.links.source && (
@@ -250,8 +271,10 @@ function App() {
                             href={project.links.source}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`${project.title} on GitHub`}
+                            title="Source on GitHub"
                           >
-                            <GitHubIcon /> Source
+                            <GitHubIcon />
                           </a>
                         )}
                       </div>
